@@ -2,78 +2,70 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EDA V6 - Clean</title>
-<link rel="manifest" href="manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDA V7 - Gardien</title>
 <style>
-body{background:#000;color:#ffb86b;font-family:Orbitron,sans-serif;display:flex;flex-direction:column;align-items:center;padding:10px}
-.kitt-box{width:95vw;max-width:440px;border:2px solid red;border-radius:20px;padding:12px;background:#080000;box-shadow:0 0 30px red}
-#eda-msg{text-align:center;margin:10px;font-size:13px;min-height:60px;color:#ff5555}
-.btn{width:95vw;max-width:440px;padding:15px;margin-top:8px;border-radius:30px;border:2px solid red;font-weight:700;cursor:pointer}
-.btn-talk{background:linear-gradient(#ff2222,#990000);color:#fff}
-.btn-gps{background:linear-gradient(#00aaff,#0033aa);border-color:#00aaff;color:#fff}
-.btn-stop{background:#1a0000;color:#ffaaaa}
-#map{width:95vw;max-width:440px;height:200px;margin-top:10px;border-radius:15px;display:none;border:1px solid red}
-.api-panel{width:95vw;max-width:440px;margin-top:12px;background:#111;border:1px solid #440000;border-radius:15px;padding:10px;font-size:10px}
+body{background:#0a0014;color:#fff;font-family:Arial;text-align:center;padding:20px}
+h1{color:#ffd700;text-shadow:0 0 20px gold}
+#orb{width:120px;height:120px;background:radial-gradient(circle,#a855f7,#4c1d95);border-radius:50%;margin:20px auto;box-shadow:0 0 40px #a855f7;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+button{background:linear-gradient(45deg,#a855f7,gold);border:none;padding:15px 30px;border-radius:30px;font-size:18px;margin:10px;color:#000;font-weight:bold}
+#reponse{margin-top:20px;padding:20px;background:rgba(168,85,247,0.2);border-radius:15px;min-height:60px;font-size:18px}
 </style>
 </head>
 <body>
-<h1 style="color:gold;text-shadow:0 0 10px red">EDA V6 CLEAN</h1>
-<div id="eda-msg">Eda prête. Cerveau Houphouët + Maya + Offline</div>
-<div class="kitt-box"><div id="coords" style="font-size:11px;color:gold;text-align:center"></div></div>
-<button class="btn btn-talk" id="talk">🎙 PARLER À EDA</button>
-<button class="btn btn-gps" id="gpsBtn">📍 OÙ SUIS-JE?</button>
-<button class="btn btn-stop" id="stop">⏻ STOP</button>
-<div id="map"></div>
-<div class="api-panel"><div id="netStatus"></div></div>
+<h1>EDA V7 CLEAN</h1>
+<div id="orb"></div>
+<button onclick="parler()">🎙 PARLER À EDA</button>
+<button onclick="ouSuisJe()">📍 OU SUIS-JE?</button>
+<div id="reponse">Je t'écoute Gardien...</div>
 
 <script>
 const CERVEAU = {
-  paix: ["La paix, ce n'est pas un mot. C'est un comportement.", "Quand on veut faire la paix, il faut parler à ses ennemis."],
-  travail: ["La terre ne ment pas.", "Le développement ne se décrète pas. Il se fait."],
-  maya: ["In Lak'ech Ala K'in - Je suis toi, tu es moi.", "Nous sommes les hommes de maïs.", "Le temps n'est pas une ligne, c'est une roue qui tourne.", "Que ton cœur soit comme le jaguar.", "Hunab Ku : Tout est connecté."],
-  africain: ["Un seul doigt ne ramasse pas un caillou.", "Si tu veux aller loin, marche ensemble."]
+paix: ["La paix commence avec un sourire.","Sois le changement que tu veux voir.","Le calme est la clé de la force."],
+africain: ["Un seul doigt ne ramasse pas un caillou.","C'est au bout de la vieille corde qu'on tisse la nouvelle.","Si tu veux aller vite, marche seul, si tu veux aller loin, marchons ensemble.","L'arbre qui tombe fait plus de bruit que la forêt qui pousse.","On ne montre pas son village avec la main gauche."],
+maya: ["In Lak'ech Ala K'in - Je suis toi, tu es moi.","Chaque fin est un nouveau commencement.","Le temps n'est pas une ligne, c'est un cercle."],
+sagesse: ["Ce que tu cherches te cherche aussi.","Respire, tout est déjà en toi Gardien.","Le silence est la plus grande sagesse."],
+amour: ["Tu es lumière, Gardien.","Ton cœur connait déjà le chemin."]
 };
+
+let dernierProverbe = "";
+
+function getProverbe() {
+  let tous = Object.values(CERVEAU).flat();
+  let dispo = tous.filter(p => p!== dernierProverbe);
+  let choix = dispo[Math.floor(Math.random()*dispo.length)];
+  dernierProverbe = choix;
+  return choix;
+}
 
 function speak(t){
-  document.getElementById('eda-msg').textContent = "Eda: "+t;
+  document.getElementById('reponse').innerText = t;
   let u = new SpeechSynthesisUtterance(t);
-  u.lang='fr-FR'; u.rate=0.95;
+  u.lang='fr-FR'; u.rate=0.9;
   speechSynthesis.speak(u);
 }
-function getProverbe(theme){
-  let list = CERVEAU[theme] || Object.values(CERVEAU).flat();
-  return list[Math.floor(Math.random()*list.length)];
-}
 
-document.getElementById('gpsBtn').onclick=()=>{
-  navigator.geolocation.getCurrentPosition(pos=>{
-    const lat=pos.coords.latitude, lon=pos.coords.longitude;
-    document.getElementById('coords').textContent = lat.toFixed(4)+", "+lon.toFixed(4);
-    document.getElementById('map').style.display='block';
-    document.getElementById('map').innerHTML=`<iframe width="100%" height="100%" style="border:0;border-radius:15px" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.02},${lat-0.02},${lon+0.02},${lat+0.02}&layer=mapnik&marker=${lat},${lon}"></iframe>`;
-    speak(`Position verrouillée Gardien. ${getProverbe('maya')}`);
-  },()=>speak("Active ton GPS Gardien"));
-};
-
-const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-let recog;
-if(SR){
-  recog=new SR(); recog.lang='fr-FR';
-  recog.onresult=e=>{
-    let txt=e.results[0][0].transcript;
-    let low=txt.toLowerCase();
-    if(low.includes("paix")) speak(getProverbe('paix'));
-    else if(low.includes("maya")||low.includes("maïs")||low.includes("jaguar")) speak(getProverbe('maya'));
-    else if(low.includes("travail")||low.includes("terre")) speak(getProverbe('travail'));
-    else speak(getProverbe('africain'));
+function parler(){
+  const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  rec.lang='fr-FR';
+  rec.onstart=()=>{document.getElementById('reponse').innerText="J'écoute... parle Gardien 🎙"};
+  rec.onresult=(e)=>{
+    let txt = e.results[0][0].transcript.toLowerCase();
+    if(txt.includes("salut")||txt.includes("bonjour")){
+      speak("Salut Gardien Sidiki! Je suis EDA V7, ton cerveau infini est activé. " + getProverbe());
+    } else {
+      speak(getProverbe());
+    }
   };
+  rec.start();
 }
-document.getElementById('talk').onclick=()=>{try{recog.start()}catch{recog.stop();}};
-document.getElementById('stop').onclick=()=>{speechSynthesis.cancel(); recog&&recog.stop();};
-function updateNet(){document.getElementById('netStatus').textContent=navigator.onLine?"📶 En ligne":"📴 Hors ligne - Cache actif";}
-window.addEventListener('online',updateNet);window.addEventListener('offline',updateNet);updateNet();
-if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+
+function ouSuisJe(){
+  navigator.geolocation.getCurrentPosition(p=>{
+    speak(`Tu es ici Gardien, latitude ${p.coords.latitude.toFixed(2)}, longitude ${p.coords.longitude.toFixed(2)}. ${getProverbe()}`);
+  });
+}
 </script>
 </body>
 </html>
