@@ -20,88 +20,88 @@ body{background:#000;color:#ffb86b;font-family:Arial;display:flex;flex-direction
 <button class="btn btn-stop" id="stop">⏻ STOP</button>
 <div id="map"></div>
 <div class="api-panel">
-<div>🔑 VARIANT: <span id="variantShow">azrase12x</span> - NASA: <span id="keyStatus">DEMO_KEY caché</span></div>
+<div>🔑 VARIANT: <span id="variantShow">jp9ayXkVvXdE5kH0INdadGgabLPRFiKGZ9vKg0K2x</span> - NASA: <span id="keyStatus">DEMO_KEY caché</span></div>
 <div id="placeName" style="color:#00ffaa;margin-top:4px;font-size:12px"></div>
 <div id="netStatus">📶 Réseau:...</div>
 <div id="sageStats" style="color:#888;margin-top:4px"></div>
 </div>
 <script>
-const VARIANT_ID="azrase12x";
+const VARIANT_ID="jp9ayXkVvXdE5kH0INdadGgabLPRFiKGZ9vKg0K2";
 localStorage.setItem('nasa_key_variant',VARIANT_ID);
 const CERVEAU={
- paix:["La paix, ce n'est pas un mot. C'est un comportement.","Quand on veut faire la paix, il faut parler à ses ennemis.","La force ne fait pas raison."],
- travail:["La terre ne ment pas. Elle donne ce que tu lui donnes.","Le développement ne se décrète pas. Il se fait."],
- africain:["Un seul doigt ne peut pas ramasser un caillou.","Si tu veux aller vite, marche seul. Si tu veux aller loin, marche ensemble.","C'est au bout de la vieille corde qu'on tisse la nouvelle.","L'arbre qui tombe fait plus de bruit que la forêt qui pousse."],
- europeen:["Les petits ruisseaux font les grandes rivières.","L'union fait la force."],
- amour:["L'amour ne se mange pas, mais il nourrit le cœur.","On ne voit bien qu'avec le cœur."],
- maya:["In Lak'ech Ala K'in - Je suis toi, tu es moi. Nous sommes un même cœur. (Maya)","Le maïs est notre chair, nous sommes les hommes de maïs. - Popol Vuh","Que ton cœur soit comme le jaguar qui veille dans la nuit, silencieux et sage.","Ne coupe pas l'arbre qui te donne de l'ombre. - Sagesse Maya Itza","Le temps n'est pas une ligne, c'est une roue qui tourne. Tout revient.","Hunab Ku : Il n'y a qu'un seul donateur de vie, tout est connecté.","Comme le serpent à plumes Quetzalcoatl, la sagesse rampe puis s'élève vers le ciel.","Ne cherche pas la fin du monde, cherche le début d'un nouveau cycle."]
+paix:["La paix, ce n'est pas un mot. C'est un comportement.","Quand on veut faire la paix, il faut parler à ses ennemis.","La force ne fait pas raison."],
+travail:["La terre ne ment pas. Elle donne ce que tu lui donnes.","Le développement ne se décrète pas. Il se fait."],
+africain:["Un seul doigt ne peut pas ramasser un caillou.","Si tu veux aller vite, marche seul. Si tu veux aller loin, marche ensemble.","C'est au bout de la vieille corde qu'on tisse la nouvelle.","L'arbre qui tombe fait plus de bruit que la forêt qui pousse."],
+europeen:["Les petits ruisseaux font les grandes rivières.","L'union fait la force."],
+amour:["L'amour ne se mange pas, mais il nourrit le cœur.","On ne voit bien qu'avec le cœur."],
+maya:["In Lak'ech Ala K'in - Je suis toi, tu es moi. Nous sommes un même cœur. (Maya)","Le maïs est notre chair, nous sommes les hommes de maïs. - Popol Vuh","Que ton cœur soit comme le jaguar qui veille dans la nuit, silencieux et sage.","Ne coupe pas l'arbre qui te donne de l'ombre. - Sagesse Maya Itza","Le temps n'est pas une ligne, c'est une roue qui tourne. Tout revient.","Hunab Ku : Il n'y a qu'un seul donateur de vie, tout est connecté.","Comme le serpent à plumes Quetzalcoatl, la sagesse rampe puis s'élève vers le ciel.","Ne cherche pas la fin du monde, cherche le début d'un nouveau cycle."]
 };
 let custom=JSON.parse(localStorage.getItem('eda_proverbes_custom')||'[]');
 custom.forEach(p=>CERVEAU.africain.push(p));
 let dernierProverbe="";
 function getProverbe(theme){
-  let list=CERVEAU[theme]||Object.values(CERVEAU).flat();
-  let dispo=list.filter(p=>p!==dernierProverbe);
-  let choix=dispo[Math.floor(Math.random()*dispo.length)];
-  dernierProverbe=choix; return choix;
+  let list=CERVEAU[theme]||Object.values(CERVEAU).flat();
+  let dispo=list.filter(p=>p!==dernierProverbe);
+  let choix=dispo[Math.floor(Math.random()*dispo.length)];
+  dernierProverbe=choix; return choix;
 }
 function speak(t){document.getElementById('eda-msg').textContent='Eda: '+t;let u=new SpeechSynthesisUtterance(t);u.lang='fr-FR';u.rate=0.92;speechSynthesis.speak(u);}
 function parlerAvecSagesse(base,theme){
-  let proverbe=getProverbe(theme);
-  let stats=JSON.parse(localStorage.getItem('eda_sagesse_stats')||'{}'); stats[theme]=(stats[theme]||0)+1;
-  localStorage.setItem('eda_sagesse_stats',JSON.stringify(stats));
-  document.getElementById('sageStats').textContent=`Cerveau: ${Object.keys(stats).length} thèmes | Dernier: ${theme} | Variant ${VARIANT_ID}`;
-  speak(`${base} Écoute Gardien : ${proverbe}`);
+  let proverbe=getProverbe(theme);
+  let stats=JSON.parse(localStorage.getItem('eda_sagesse_stats')||'{}'); stats[theme]=(stats[theme]||0)+1;
+  localStorage.setItem('eda_sagesse_stats',JSON.stringify(stats));
+  document.getElementById('sageStats').textContent=`Cerveau: ${Object.keys(stats).length} thèmes | Dernier: ${theme} | Variant ${VARIANT_ID}`;
+  speak(`${base} Écoute Gardien : ${proverbe}`);
 }
 function apprendreProverbeInterne(texte){
-  if(texte.length<10) return;
-  let customs=JSON.parse(localStorage.getItem('eda_proverbes_custom')||'[]');
-  customs.push(texte); localStorage.setItem('eda_proverbes_custom',JSON.stringify(customs));
-  CERVEAU.africain.push(texte);
-  speak(`C'est enregistré Gardien. J'ai appris : ${texte}. Mon langage s'améliore grâce à toi. In Lak'ech.`);
+  if(texte.length<10) return;
+  let customs=JSON.parse(localStorage.getItem('eda_proverbes_custom')||'[]');
+  customs.push(texte); localStorage.setItem('eda_proverbes_custom',JSON.stringify(customs));
+  CERVEAU.africain.push(texte);
+  speak(`C'est enregistré Gardien. J'ai appris : ${texte}. Mon langage s'améliore grâce à toi. In Lak'ech.`);
 }
 // GPS AMÉLIORÉ AVEC NOM
 document.getElementById('gpsBtn').onclick=()=>{
- navigator.geolocation.getCurrentPosition(async pos=>{
-  const lat=pos.coords.latitude; const lon=pos.coords.longitude;
-  document.getElementById('coords').textContent=`${lat.toFixed(5)}, ${lon.toFixed(5)}`;
-  document.getElementById('map').style.display='block';
-  document.getElementById('map').innerHTML=`<iframe width="100%" height="100%" style="border:0" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.02},${lat-0.02},${lon+0.02},${lat+0.02}&layer=mapnik&marker=${lat},${lon}"></iframe>`;
-  let nomLieu="Position Gardien";
-  try{
-    let rev=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`).then(r=>r.json());
-    let addr=rev.address;
-    nomLieu = `${addr.village||addr.suburb||addr.city_district||addr.town||addr.city||'Zone'} - ${addr.city||addr.town||''} - ${addr.country||''}`;
-    document.getElementById('placeName').textContent=`📍 ${rev.display_name}`;
-    localStorage.setItem('eda_last_place', JSON.stringify({nom:nomLieu,full:rev.display_name,lat,lon}));
-  }catch(e){
-    let last=JSON.parse(localStorage.getItem('eda_last_place')||'null');
-    if(last){ nomLieu=last.nom; document.getElementById('placeName').textContent=`📍 (Offline) ${last.full}`; }
-    else{ document.getElementById('placeName').textContent=`📍 Mode hors ligne - coords seulement`; }
-  }
-  try{
-    const eonet=await fetch(`https://eonet.gsfc.nasa.gov/api/v3/events?bbox=${lon-2},${lat-2},${lon+2},${lat+2}`).then(r=>r.json());
-    parlerAvecSagesse(`Gardien, tu es à ${nomLieu}. Latitude ${lat.toFixed(2)}. ${eonet.events?.length||0} événements satellites NASA autour de toi.`, "maya");
-  }catch{
-    parlerAvecSagesse(`Gardien, tu es à ${nomLieu}. Latitude ${lat.toFixed(2)}. Mode offline, j'utilise mon cache sagesse.`, "paix");
-  }
- },()=>speak("Active ton GPS Gardien"));
+navigator.geolocation.getCurrentPosition(async pos=>{
+  const lat=pos.coords.latitude; const lon=pos.coords.longitude;
+  document.getElementById('coords').textContent=`${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+  document.getElementById('map').style.display='block';
+  document.getElementById('map').innerHTML=`<iframe width="100%" height="100%" style="border:0" src="https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.02},${lat-0.02},${lon+0.02},${lat+0.02}&layer=mapnik&marker=${lat},${lon}"></iframe>`;
+  let nomLieu="Position Gardien";
+  try{
+    let rev=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`).then(r=>r.json());
+    let addr=rev.address;
+    nomLieu = `${addr.village||addr.suburb||addr.city_district||addr.town||addr.city||'Zone'} - ${addr.city||addr.town||''} - ${addr.country||''}`;
+    document.getElementById('placeName').textContent=`📍 ${rev.display_name}`;
+    localStorage.setItem('eda_last_place', JSON.stringify({nom:nomLieu,full:rev.display_name,lat,lon}));
+  }catch(e){
+    let last=JSON.parse(localStorage.getItem('eda_last_place')||'null');
+    if(last){ nomLieu=last.nom; document.getElementById('placeName').textContent=`📍 (Offline) ${last.full}`; }
+    else{ document.getElementById('placeName').textContent=`📍 Mode hors ligne - coords seulement`; }
+  }
+  try{
+    const eonet=await fetch(`https://eonet.gsfc.nasa.gov/api/v3/events?bbox=${lon-2},${lat-2},${lon+2},${lat+2}`).then(r=>r.json());
+    parlerAvecSagesse(`Gardien, tu es à ${nomLieu}. Latitude ${lat.toFixed(2)}. ${eonet.events?.length||0} événements satellites NASA autour de toi.`, "maya");
+  }catch{
+    parlerAvecSagesse(`Gardien, tu es à ${nomLieu}. Latitude ${lat.toFixed(2)}. Mode offline, j'utilise mon cache sagesse.`, "paix");
+  }
+},()=>speak("Active ton GPS Gardien"));
 };
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition; let recog;
 if(SR){
- recog=new SR();recog.lang='fr-FR';recog.continuous=false;
- recog.onresult=e=>{
-  let txt=e.results[0][0].transcript; document.getElementById('eda-msg').textContent='Toi: '+txt;
-  let low=txt.toLowerCase();
-  if(low.startsWith("eda apprends")||low.startsWith("eda retiens")||low.startsWith("eda note")){
-    let proverbe=txt.split(/apprends|retiens|note/i)[1].trim(); apprendreProverbeInterne(proverbe); return;
-  }
-  if(low.includes("ou suis")||low.includes("position")){document.getElementById('gpsBtn').click();return;}
-  if(low.includes("paix")) parlerAvecSagesse("Tu parles de paix Gardien.", "paix");
-  else if(low.includes("maya")||low.includes("maïs")||low.includes("jaguar")) parlerAvecSagesse("Tu touches à la sagesse ancienne Gardien.", "maya");
-  else if(low.includes("travail")||low.includes("terre")) parlerAvecSagesse("Tu parles de travail Gardien.", "travail");
-  else parlerAvecSagesse(`J'ai entendu : ${txt}`, "africain");
- };
+recog=new SR();recog.lang='fr-FR';recog.continuous=false;
+recog.onresult=e=>{
+  let txt=e.results[0][0].transcript; document.getElementById('eda-msg').textContent='Toi: '+txt;
+  let low=txt.toLowerCase();
+  if(low.startsWith("eda apprends")||low.startsWith("eda retiens")||low.startsWith("eda note")){
+    let proverbe=txt.split(/apprends|retiens|note/i)[1].trim(); apprendreProverbeInterne(proverbe); return;
+  }
+  if(low.includes("ou suis")||low.includes("position")){document.getElementById('gpsBtn').click();return;}
+  if(low.includes("paix")) parlerAvecSagesse("Tu parles de paix Gardien.", "paix");
+  else if(low.includes("maya")||low.includes("maïs")||low.includes("jaguar")) parlerAvecSagesse("Tu touches à la sagesse ancienne Gardien.", "maya");
+  else if(low.includes("travail")||low.includes("terre")) parlerAvecSagesse("Tu parles de travail Gardien.", "travail");
+  else parlerAvecSagesse(`J'ai entendu : ${txt}`, "africain");
+};
 }
 document.getElementById('talk').onclick=()=>{try{recog.start()}catch{recog.stop();setTimeout(()=>recog.start(),200)}};
 document.getElementById('stop').onclick=()=>{speechSynthesis.cancel();recog&&recog.stop();};
